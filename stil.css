@@ -1,3 +1,5 @@
+/*----------pocetna-------------*/
+
 *{
 	margin: 0px;
 	box-sizing: border-box;
@@ -160,6 +162,8 @@ footer {
     color: dimgray;
 }
 
+/*----------logo-------------*/
+
 #wrap {
 	opacity: 0.9;
   	height: 120px;
@@ -321,6 +325,38 @@ footer {
 	width: 5px;
 	height: 47px;
     background-color: #A8A8A8;
+}
+
+
+/*----------linkovi-------------*/
+
+#links {
+	width: 26%;
+    margin: auto;
+    margin-left: 305px;
+	margin-top: 10px;
+	margin-bottom: 273px;
+}
+
+#links > h2 {
+	font-size: 50px;
+	margin-left: 15px;
+	font-family: "Georgia", serif;
+}
+
+#links > ul {
+	margin-left: 30px;
+	list-style-type: none;
+}
+
+#links > ul > li {
+	font-size: 25px;
+	font-family: "Georgia", serif;
+}
+
+#links > ul > li:hover {
+	list-style-image: url("http://rltshows.com/images/football_small.jpg");
+	list-style-position: center;
 }
 
 
