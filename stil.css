@@ -378,24 +378,24 @@ footer {
 }
 
 #links > ul > li {
+	margin-top: 12%;
+	margin-bottom: 12%;
 	font-size: 25px;
 	font-family: "Georgia", serif;
 }
 
 #links > ul > li:hover {
 	list-style-image: url("http://rltshows.com/images/football_small.jpg");
-	list-style-position: center;
 }
 
 /*---------timovi----------*/
 
 #timovi {
 	font-family: sans-serif;
-	margin-top: 50px;
 	width: 60%;
 	margin: auto;
 	margin-top: 10px;
-	margin-left: 307px;
+	table-layout: fixed;
 }
 
 #timovi > table, tr, th, td {
@@ -403,7 +403,7 @@ footer {
 	text-align: center;
 	border: 3px solid black;
 	border-collapse: collapse;
-	padding: 5px;
+	padding: 7px;
 }
 
 #konferencije {
@@ -453,11 +453,12 @@ form > label, input, textarea {
 
 form > textarea {
 	max-width: 50%;
-	height: 20%;
+	max-height: 200px;
+	height: 200px;
 }
 
 #posaljiBtn {
-	height: 8%;
+	height: 50px;
 }
 
 
