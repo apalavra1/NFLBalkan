@@ -76,6 +76,23 @@ nav > ul > li {
     font-family: "Comic Sans MS", sans-serif;
 }
 
+#vijesti_filter {
+	height: 100%;
+	border: 1px #B8B8B8;
+	display: inline-block;
+	height: inherit;
+	background: #B8B8B8;
+	color: #383838;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: "Comic Sans MS", sans-serif;
+}
+
+#vijesti_filter:hover, #vijesti_filter:active {
+	color: white;
+    background-color: #000066;
+}
+
 #title > h2 {
 	position: absolute;
     left: 60px;
@@ -95,6 +112,7 @@ nav > ul > li {
 	width: 97.5%;
 	margin-left: 1%; 
 	background-color: #D0D0D0;
+	height: 460px;
 }
 
 #content > section > #featured_news > img {
@@ -118,6 +136,7 @@ nav > ul > li {
 #content > section {
 	width: 70%;
     float: left;
+    margin-bottom: 40px;
 }
 
 #content > section > article {
@@ -141,8 +160,15 @@ nav > ul > li {
     display: inline-block;
     margin-top: 6px;
     margin-left: 6px;
-    margin-bottom: 40px;
     vertical-align: top;
+    height: 370px;
+}
+
+.published {
+	position: relative;
+	font-family: sans-serif;
+    font-size: 10px;
+    color: #888888;
 }
 
 aside > img {
@@ -176,10 +202,10 @@ footer {
 	background-color: #B8B8B8;
     text-align: right;
     font-family: sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     border-top: 1px solid lightgrey;
     position: fixed;
     bottom: 0px;

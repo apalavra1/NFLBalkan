@@ -5,6 +5,8 @@
 	<title>Naslovnica NFLBalkan</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
+	<script src="vrijemeObjave.js"></script>
+	<script src="filterVijesti.js"></script>
 </head>
 
 <body>
@@ -139,26 +141,39 @@
 			<li><a class="nav" href="./timovi.html">Timovi</a></li>
 			<li><a class="nav" href="./linkovi.html">Linkovi</a></li>
 			<li><a class="nav" href="./kontakt.html">Kontakt</a></li>
+			<li><select id="vijesti_filter" onchange="filtriraj(this)">
+                <option class="opcija_filter" value="sve">Sve vijesti</option>
+                <option class="opcija_filter" value="danasnje">Današnje vijesti</option>
+                <option class="opcija_filter" value="ove_sedmice">Vijesti ove sedmice</option>
+                <option class="opcija_filter" value="ovog_mjeseca">Vijesti ovog mjeseca</option>
+            </select></li>
 		</ul>
 	</nav>
+	
 	<div id="content">
 		<section>
-			<article id="featured_news">
+			<article class="other_news">
 				<h3>Tray Walker teško povrijeđen</h3>
 				<img src="http://www.baltimoreravens.com/assets/images/imported/BAL/news-articles/2015/12-December/03/17_TrayWalker_news.jpg" alt="Tray Walker">
-				<p>Cornerback Baltimore Ravens-a Tray Walker je teško povrijeđen u nesreći u jugoistočnoj Floridi koju je doživio vozeći motocikl. 23-ogodišnji Walker je prebačen u Jackson Memorial bolnicu u Miami-u u kritičnom stanju. Doživio je teške povrede glave, te je cijelu noć proveo u operacionoj sali i trenutno se bori za život. Izabran je na draft-u prošle godine. Odigrao je osam utakmica za Baltimore, uglavnom kao član specijalnih timova.</p>
+				<p>Cornerback Baltimore Ravens-a Tray Walker je teško povrijeđen u nesreći u jugoistočnoj Floridi koju je doživio vozeći motocikl. 23-ogodišnji Walker je prebačen u Jackson Memorial bolnicu u Miami-u u kritičnom stanju. Doživio je teške povrede glave, te je cijelu noć proveo u operacionoj sali i trenutno se bori za život. Izabran je na draft-u prošle godine. Odigrao je osam utakmica za Baltimore.</p><br>
+				<div hidden class="date_published">March 28, 2016 23:00:00</div>
+				<div class="published"></div>
 			</article>
 
 			<article class="other_news">
 				<h3>Okung u Denver-u</h3>
 				<img src="http://fansided.com/files/2013/09/76184001-e1379717386911.jpg" alt="Russell Okung">
 				<p>Denver Broncos-i su izgubili mnogo igrača otkad su osvojili Super Bowl 50 prije nešto više od mjesec dana. U četvrtak su dodali novo lice u tim. Ofanzivni tackle je potpisao jednogodišnji ugovor vrijedan 5 miliona $, koji uključuje timsku opciju dugu 4 godine i vrijednu 48 miliona. O ovome je prvo izvijestio Ian Rapoport, a Broncos-i kasnije potvrdili.</p>
+				<div hidden class="date_published">April 2, 2016 00:02:00</div><br>
+				<div class="published"></div>
 			</article>
 
 			<article class="other_news">
 				<h3>CJ2K ostaje u Arizoni</h3>
 				<img src="http://sportsperspectives.com/wp-content/uploads/2016/03/chris-johnson.jpg" alt="Chris Johnson">
 				<p>Miami Dolphins-i su propustili priliku da potpišu još jednog running back-a. Ian Rapoport je objavio u četvrtak da je Chris Johnson potpisao jednogodišnji ugovor sa Arizona Cardinals-ima vrijedan 3 miliona $, što je potvrdio izvor upoznat sa pregovorima. Tim je kasnije potvrdio dogovor. Rapoport je također izvijestio da je Johnson odbio skori duplo veći iznos od drugog tima.</p>
+				<div hidden class="date_published">April 1, 2016 21:29:00</div><br>
+				<div class="published"></div>
 			</article>
 		</section>
 
