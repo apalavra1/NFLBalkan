@@ -122,7 +122,7 @@ nav > ul > li {
 
 #content > section > article > img {
     width: 100%;
-    max-height: 180px;
+    max-height: 170px;
     margin-bottom: 10px;
 }
 
@@ -484,7 +484,9 @@ form > textarea {
 }
 
 #posaljiBtn {
+	width: 50%;
 	height: 50px;
+	margin-bottom: 3%;
 }
 
 

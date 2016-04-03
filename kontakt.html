@@ -4,6 +4,7 @@
 	<title>Kontakt</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
+	<script src="validacija.js"></script>
 </head>
 <body>
 <div id="container">
@@ -142,19 +143,19 @@
 	</nav>
 
 	<form>
-		<label>Ime</label>
-		<input type="text" placeholder="Ime" name="ime">
+		<label>Ime (prvo slovo veliko, najmanje 2 slova)</label>
+		<input id="ime" type="text" placeholder="Ime" name="ime" onfocus="validiraj('ime')">
 		<br>
-		<label>Prezime</label>
-		<input type="text" placeholder="Prezime" name="prezime">
+		<label>Prezime (prvo slovo veliko, najmanje 2 slova)</label>
+		<input id="prezime" type="text" placeholder="Prezime" name="prezime" onfocus="validiraj('prezime')">
 		<br>
-		<label>E-Mail</label>
-		<input type="email" placeholder="E-Mail" name="email">
+		<label>E-Mail (format nesto@nesto.nesto, sadrži ime i/ili prezime malim slovima)</label>
+		<input id="email" type="email" placeholder="E-Mail" name="email" onfocus="validiraj('email')">
 		<br>
-		<label>Članak</label>
-		<textarea name="clanak" placeholder="Članak..."></textarea>
+		<label>Članak (ne smije biti prazno)</label>
+		<textarea id="clanak" name="clanak" placeholder="Članak..." onfocus="validiraj('clanak')"></textarea>
 		<br>
-		<input type="submit" id="posaljiBtn" value="Pošalji">
+		<button id="posaljiBtn" type="button" onclick="return posalji()"> Pošalji </button>
 		<br>
 	</form>
 	<footer>
