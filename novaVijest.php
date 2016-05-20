@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Kontakt</title>
+	<title>Dodavanje vijesti</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
-	<script src="validacija.js"></script>
+	<script src="validacijaVijesti.js"></script>
 </head>
 <body>
 <div hidden id="prijavljen"></div>
@@ -141,6 +141,7 @@
 			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
 			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
 			<?php
+				$message = '';
             	session_start();
             	if(isset($_SESSION['login'])) 
             	{
@@ -160,24 +161,62 @@
       		?>
 		</ul>
 	</nav>
-	<div id="formaKontakt">
-		<form>
-			<label>Ime (prvo slovo veliko, najmanje 2 slova)</label>
-			<input id="ime" type="text" placeholder="Ime" name="ime" onfocus="validiraj('ime')">
+	<?php
+		if (isset($_POST['dodaj'])) 
+		{
+			date_default_timezone_set("Europe/Sarajevo");
+            $vijesti = file("vijesti.csv");
+
+            $naslov = htmlentities($_POST['naslov']);
+            $naslov = str_replace(",", "&#44;", $naslov);
+
+            $slika = htmlentities($_POST['slika']);
+            $slika = str_replace(",", "&#44;", $slika);
+
+            $alt = htmlentities($_POST['alt']);
+            $alt = str_replace(",", "&#44;", $alt);
+            
+            $tekst = htmlentities($_POST['tekst']);
+            $tekst = str_replace(",", "&#44;", $tekst);
+
+            $datum = date("d.m.Y");
+            $vrijeme = date("H:i:s");
+
+            if(empty($naslov) || !preg_match("/\.(jpeg|jpg|gif|png)/", $slika) || empty($alt) || empty($tekst))
+            {
+            	$message = "Neki od podataka nije ispravno unesen, pratite upute iznad svakog od polja.";
+				echo "<script type='text/javascript'>alert('$message');</script>";
+            }
+            else
+            {
+	            $nova = $naslov.",".$slika.",".$alt.",".$tekst.",".$datum.",".$vrijeme."\r\n";
+	            array_push($vijesti, $nova);
+	            file_put_contents("vijesti.csv", $vijesti);
+	            $message = "Uspješno ste dodali vijest.";
+	            echo "<script type='text/javascript'>alert('$message');</script>";
+            }
+    	}
+
+	?>
+	<div id="formaVijest">
+		<form action="novaVijest.php" method="post">
+			<br><label>Naslov(ne smije biti prazno)</label>
+			<input id="naslov" type="text" placeholder="Naslov" name="naslov" onfocus="validiraj('naslov')">
 			<br>
-			<label>Prezime (prvo slovo veliko, najmanje 2 slova)</label>
-			<input id="prezime" type="text" placeholder="Prezime" name="prezime" onfocus="validiraj('prezime')">
+			<label>URL za sliku(mora biti ispravan i slika)</label>
+			<input id="slika" type="url" placeholder="URL slike" name="slika" onfocus="validiraj('slika')">
 			<br>
-			<label>E-Mail (format nesto@nesto.nesto, sadrži ime i/ili prezime malim slovima)</label>
-			<input id="email" type="email" placeholder="E-Mail" name="email" onfocus="validiraj('email')">
+			<label>Alt tag za sliku(ne smije biti prazno)</label>
+			<input id="alt" type="text" placeholder="ALT tag" name="alt" onfocus="validiraj('alt')">
 			<br>
 			<label>Članak (ne smije biti prazno)</label>
-			<textarea id="clanak" name="clanak" placeholder="Članak..." onfocus="validiraj('clanak')"></textarea>
+			<textarea id="tekst" name="tekst" placeholder="Članak..." onfocus="validiraj('tekst')"></textarea>
 			<br>
-			<button id="posaljiBtn" type="button" onclick="return posalji()"> Pošalji </button>
+			<input type="submit" id="dodajBtn" name="dodaj" type="button" value="Pošalji" onclick="return dodaj();"> 
 			<br>
 		</form>
 	</div>
+	
 	<footer>
 		© Copyright NFLBalkan.com 2016 <br>
 		Sva prava zadržana. Zabranjeno preuzimanje bez dozvole izdavača

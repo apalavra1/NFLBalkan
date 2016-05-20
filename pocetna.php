@@ -152,7 +152,8 @@
             	if(isset($_SESSION['login'])) 
             	{
             ?>
-            <li id="logout"><a class="nav" href="logout.php">Odjava</a></li>
+            <li id="novaVijest"><a class="nav" href="./novaVijest.php">Nova vijest</a></li>
+            <li id="logout"><a class="nav" href="./logout.php">Odjava</a></li>
             <?php
             	}
             ?>
@@ -160,7 +161,7 @@
             	if(!isset($_SESSION['login']))
             	{
       		?>
-      		<li id="login"><a class="nav" href="login.php">Prijava</a></li>
+      		<li id="login"><a class="nav" href="./login.php">Prijava</a></li>
       		<?php
       			}
       		?>
@@ -273,7 +274,7 @@
 				<h3>CJ2K ostaje u Arizoni</h3>
 				<img src="http://sportsperspectives.com/wp-content/uploads/2016/03/chris-johnson.jpg" alt="Chris Johnson">
 				<p>Miami Dolphins-i su propustili priliku da potpišu još jednog running back-a. Ian Rapoport je objavio u četvrtak da je Chris Johnson potpisao jednogodišnji ugovor sa Arizona Cardinals-ima vrijedan 3 miliona $, što je potvrdio izvor upoznat sa pregovorima. Tim je kasnije potvrdio dogovor. Rapoport je također izvijestio da je Johnson odbio skori duplo veći iznos od drugog tima.</p>
-				<div hidden class="date_published">Februray 25, 2016 21:29:00</div><br>
+				<div hidden class="date_published">February 25, 2016 21:29:00</div><br>
 				<div class="published"></div>
 			</article>
 

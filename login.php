@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Preporučeni linkovi</title>
+    <title>Prijava na NFL Balkan</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="stil.css">
 </head>
@@ -140,10 +140,12 @@
             <li><a class="nav" href="./linkovi.php">Linkovi</a></li>
             <li><a class="nav" href="./kontakt.php">Kontakt</a></li>
             <?php
+                session_start();
                 if(isset($_SESSION['login'])) 
                 {
             ?>
-            <li id="logout"><a class="nav" href="logout.php">Odjava</a></li>
+            <li id="novaVijest"><a class="nav" href="./novaVijest.php">Nova vijest</a></li>
+            <li id="logout"><a class="nav" href="./logout.php">Odjava</a></li>
             <?php
                 }
             ?>
@@ -151,14 +153,13 @@
                 if(!isset($_SESSION['login']))
                 {
             ?>
-            <li id="login"><a class="nav" href="login.php">Prijava</a></li>
+            <li id="login"><a class="nav" href="./login.php">Prijava</a></li>
             <?php
                 }
             ?>
         </ul>
     </nav>
     <?php
-        session_start();
         $msg = '';
 
         $sadrzaj=file('login.csv');

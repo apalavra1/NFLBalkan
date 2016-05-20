@@ -529,3 +529,33 @@ footer {
 	color: black;
     text-align: center;
 }
+
+
+/*--------------Nova vijest--------------------*/
+
+#formaVijest > form {
+	font-family: sans-serif;
+	text-align: center;
+	margin-top: 50px !important;
+	margin: auto;
+	width: 50%;
+	background-color: #A8A8A8;
+}
+
+#formaVijest > form > label, input, textarea {
+	width: 50%;
+	display: block;
+	margin: auto;
+}
+
+#formaVijest > form > textarea {
+	max-width: 50%;
+	max-height: 200px;
+	height: 200px;
+}
+
+#dodajBtn {
+	width: 50%;
+	height: 50px;
+	margin-bottom: 3%;
+}

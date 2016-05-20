@@ -3,7 +3,7 @@
 		if(varijabla == "ime") var pom = setInterval(function() { validirajImePrezime("ime") }, 100);
 		else if(varijabla == "prezime") var pom = setInterval(function() { validirajImePrezime("prezime") }, 100);
 		else if(varijabla == "email") var pom = setInterval(function() { validirajEmail() }, 100);
-		else var pom = setInterval(function() { validirajClanak() }, 100);
+		else if(varijabla == "clanak") var pom = setInterval(function() { validirajClanak() }, 100);
 	}
 
 
@@ -51,6 +51,8 @@
 		}
 		return validno;
 	}
+
+	
 
 	function posalji()
 	{

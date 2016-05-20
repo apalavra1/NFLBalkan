@@ -144,7 +144,8 @@
             	if(isset($_SESSION['login'])) 
             	{
             ?>
-            <li id="logout"><a class="nav" href="logout.php">Odjava</a></li>
+            <li id="novaVijest"><a class="nav" href="./novaVijest.php">Nova vijest</a></li>
+            <li id="logout"><a class="nav" href="./logout.php">Odjava</a></li>
             <?php
             	}
             ?>
@@ -152,7 +153,7 @@
             	if(!isset($_SESSION['login']))
             	{
       		?>
-      		<li id="login"><a class="nav" href="login.php">Prijava</a></li>
+      		<li id="login"><a class="nav" href="./login.php">Prijava</a></li>
       		<?php
       			}
       		?>
