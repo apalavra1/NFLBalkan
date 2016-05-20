@@ -11,7 +11,7 @@
 
 <body>
 <div id="container">
-	<a href="./pocetna.html"><div id="wrap">
+	<a href="./pocetna.php"><div id="wrap">
 		<div id="n_left"></div>
 		<div id="n_center"></div>
 		<div id="n_right"></div>
@@ -137,16 +137,34 @@
 
 	<nav>
 		<ul>
-			<li><a class="nav" href="./pocetna.html">Naslovnica</a></li>
-			<li><a class="nav" href="./timovi.html">Timovi</a></li>
-			<li><a class="nav" href="./linkovi.html">Linkovi</a></li>
-			<li><a class="nav" href="./kontakt.html">Kontakt</a></li>
+			<li><a class="nav" href="./pocetna.php">Naslovnica</a></li>
+			<li><a class="nav" href="./timovi.php">Timovi</a></li>
+			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
+			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
 			<li><select id="vijesti_filter" onchange="filtriraj(this)">
                 <option class="opcija_filter" value="sve">Sve vijesti</option>
                 <option class="opcija_filter" value="danasnje">Današnje vijesti</option>
                 <option class="opcija_filter" value="ove_sedmice">Vijesti ove sedmice</option>
                 <option class="opcija_filter" value="ovog_mjeseca">Vijesti ovog mjeseca</option>
             </select></li>
+            <?php
+            	session_start();
+            	if(isset($_SESSION['login'])) 
+            	{
+            ?>
+            <li id="logout"><a class="nav" href="logout.php">Odjava</a></li>
+            <?php
+            	}
+            ?>
+            <?php
+            	if(!isset($_SESSION['login']))
+            	{
+      		?>
+      		<li id="login"><a class="nav" href="login.php">Prijava</a></li>
+      		<?php
+      			}
+      		?>
+
 		</ul>
 	</nav>
 	

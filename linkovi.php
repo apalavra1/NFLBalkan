@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Timovi po divizijama</title>
+	<title>Preporučeni linkovi</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
 </head>
 <body>
+<div hidden id="prijavljen"></div>
 <div id="container">
-	<a href="./pocetna.html"><div id="wrap">
+	<a href="./pocetna.php"><div id="wrap">
 		<div id="n_left"></div>
 		<div id="n_center"></div>
 		<div id="n_right"></div>
@@ -134,78 +135,39 @@
 
 	<nav>
 		<ul>
-			<li><a class="nav" href="./pocetna.html">Naslovnica</a></li>
-			<li><a class="nav" href="./timovi.html">Timovi</a></li>
-			<li><a class="nav" href="./linkovi.html">Linkovi</a></li>
-			<li><a class="nav" href="./kontakt.html">Kontakt</a></li>
+			<li><a class="nav" href="./pocetna.php">Naslovnica</a></li>
+			<li><a class="nav" href="./timovi.php">Timovi</a></li>
+			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
+			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
+			<?php
+            	session_start();
+            	if(isset($_SESSION['login'])) 
+            	{
+            ?>
+            <li id="logout"><a class="nav" href="logout.php">Odjava</a></li>
+            <?php
+            	}
+            ?>
+            <?php
+            	if(!isset($_SESSION['login']))
+            	{
+      		?>
+      		<li id="login"><a class="nav" href="login.php">Prijava</a></li>
+      		<?php
+      			}
+      		?>
 		</ul>
 	</nav>
 
-	<div id="timovi">
-		<table>
-
-			<tr id="konferencije">
-				<th id="afc" colspan="4">AFC</th>
-				<th id="nfc" colspan="4">NFC</th>
-			</tr>
-
-			<tr id="divizije">
-				<th>EAST</th>
-				<th>NORTH</th>
-				<th>SOUTH</th>
-				<th>WEST</th>
-				<th>EAST</th>
-				<th>NORTH</th>
-				<th>SOUTH</th>
-				<th>WEST</th>
-			</tr>
-
-			<tr class="parni">
-				<td>Buffalo Bills</td>
-				<td>Baltimore Ravens</td>
-				<td>Houston Texans</td>
-				<td>Denver Broncos</td>
-				<td>Dallas Cowboys</td>
-				<td>Chicago Bears</td>
-				<td>Atlanta Falcons</td>
-				<td>Arizona Cardinals</td>
-			</tr>
-
-			<tr class="neparni">
-				<td>Miami Dolphins</td>
-				<td>Cincinnati Bengals</td>
-				<td>Indianapolis Colts</td>
-				<td>Kansas City Chiefs</td>
-				<td>New York Giants</td>
-				<td>Detroit Lions</td>
-				<td>Carolina Panthers</td>
-				<td>Los Angeles Rams</td>
-			</tr>
-
-			<tr class="parni">
-				<td>New England Patriots</td>
-				<td>Cleveland Browns</td>
-				<td>Jacksonville Jaguars</td>
-				<td>Oakland Raiders</td>
-				<td>Philadelphia Eagles</td>
-				<td>Green Bay Packers</td>
-				<td>New Orleans Saints</td>
-				<td>San Francisco 49ers</td>
-			</tr>
-
-			<tr class="neparni">
-				<td>New York Jets</td>
-				<td>Pittsburgh Steelers</td>
-				<td>Tennessee Titans</td>
-				<td>San Diego Chargers</td>
-				<td>Washington Redskins</td>
-				<td>Minnesota Vikings</td>
-				<td>Tampa Bay Buccaneers</td>
-				<td>Seattle Seahawks</td>
-			</tr>
-		</table>
+	<div id="links">
+		<h2>Preporučeni linkovi</h2>
+		<ul>
+			<li><a href="http://www.nfl.com/">NFL.com</a></li>
+			<li><a href="https://www.youtube.com/user/NFL">Youtube kanal NFL-a</a></li>
+			<li><a href="http://espn.go.com/nfl/">ESPN stranica NFL-a</a></li>
+			<li><a href="https://en.wikipedia.org/wiki/American_football_rules">Pravila američkog fudbala</a><br></li>
+		</ul>
 	</div>
-
 
 	<footer>
 		© Copyright NFLBalkan.com 2016 <br>

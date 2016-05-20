@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Preporučeni linkovi</title>
+	<title>Kontakt</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
+	<script src="validacija.js"></script>
 </head>
 <body>
+<div hidden id="prijavljen"></div>
 <div id="container">
-	<a href="./pocetna.html"><div id="wrap">
+	<a href="./pocetna.php"><div id="wrap">
 		<div id="n_left"></div>
 		<div id="n_center"></div>
 		<div id="n_right"></div>
@@ -134,23 +136,47 @@
 
 	<nav>
 		<ul>
-			<li><a class="nav" href="./pocetna.html">Naslovnica</a></li>
-			<li><a class="nav" href="./timovi.html">Timovi</a></li>
-			<li><a class="nav" href="./linkovi.html">Linkovi</a></li>
-			<li><a class="nav" href="./kontakt.html">Kontakt</a></li>
+			<li><a class="nav" href="./pocetna.php">Naslovnica</a></li>
+			<li><a class="nav" href="./timovi.php">Timovi</a></li>
+			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
+			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
+			<?php
+            	session_start();
+            	if(isset($_SESSION['login'])) 
+            	{
+            ?>
+            <li id="logout"><a class="nav" href="logout.php">Odjava</a></li>
+            <?php
+            	}
+            ?>
+            <?php
+            	if(!isset($_SESSION['login']))
+            	{
+      		?>
+      		<li id="login"><a class="nav" href="login.php">Prijava</a></li>
+      		<?php
+      			}
+      		?>
 		</ul>
 	</nav>
-
-	<div id="links">
-		<h2>Preporučeni linkovi</h2>
-		<ul>
-			<li><a href="http://www.nfl.com/">NFL.com</a></li>
-			<li><a href="https://www.youtube.com/user/NFL">Youtube kanal NFL-a</a></li>
-			<li><a href="http://espn.go.com/nfl/">ESPN stranica NFL-a</a></li>
-			<li><a href="https://en.wikipedia.org/wiki/American_football_rules">Pravila američkog fudbala</a><br></li>
-		</ul>
+	<div id="formaKontakt">
+		<form>
+			<label>Ime (prvo slovo veliko, najmanje 2 slova)</label>
+			<input id="ime" type="text" placeholder="Ime" name="ime" onfocus="validiraj('ime')">
+			<br>
+			<label>Prezime (prvo slovo veliko, najmanje 2 slova)</label>
+			<input id="prezime" type="text" placeholder="Prezime" name="prezime" onfocus="validiraj('prezime')">
+			<br>
+			<label>E-Mail (format nesto@nesto.nesto, sadrži ime i/ili prezime malim slovima)</label>
+			<input id="email" type="email" placeholder="E-Mail" name="email" onfocus="validiraj('email')">
+			<br>
+			<label>Članak (ne smije biti prazno)</label>
+			<textarea id="clanak" name="clanak" placeholder="Članak..." onfocus="validiraj('clanak')"></textarea>
+			<br>
+			<button id="posaljiBtn" type="button" onclick="return posalji()"> Pošalji </button>
+			<br>
+		</form>
 	</div>
-
 	<footer>
 		© Copyright NFLBalkan.com 2016 <br>
 		Sva prava zadržana. Zabranjeno preuzimanje bez dozvole izdavača
