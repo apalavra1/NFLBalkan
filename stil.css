@@ -537,6 +537,7 @@ footer {
 	font-family: sans-serif;
 	text-align: center;
 	margin-top: 50px !important;
+	margin-bottom: 100px !important;
 	margin: auto;
 	width: 50%;
 	background-color: #A8A8A8;
@@ -558,4 +559,10 @@ footer {
 	width: 50%;
 	height: 50px;
 	margin-bottom: 3%;
+}
+
+#drzava{
+	width: 50%;
+	display: block;
+	margin: auto;
 }

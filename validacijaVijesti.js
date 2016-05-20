@@ -62,9 +62,57 @@
 		return validno;
 	}
 
+	function validirajDvoslovniKod()
+	{
+		var ajax = new XMLHttpRequest();
+		var drzava = document.getElementById("drzava").value.toLowerCase(); 
+	
+		ajax.open("GET", "https://restcountries.eu/rest/v1/alpha?codes=" + drzava, true);
+	
+		ajax.onreadystatechange = function() 
+		{		
+			if (ajax.readyState == 4 && ajax.status == 404) alert("Greska.");
+			else
+			{
+				var json = JSON.parse(ajax.responseText);
+				document.getElementById("telefon").value = "+" + json[0].callingCodes;
+			}
+		}
+		ajax.send();
+	}
+
+	function validirajPozivniBroj()
+	{
+		var validno = false;
+		var ajax = new XMLHttpRequest();
+		var drzava = document.getElementById("drzava").value.toLowerCase(); 
+	
+		ajax.open("GET", "https://restcountries.eu/rest/v1/alpha?codes=" + drzava, true);
+	
+		ajax.onreadystatechange = function() 
+		{		
+			if (ajax.readyState == 4 && ajax.status == 404) alert("Greska.");
+			else
+			{
+				var json = JSON.parse(ajax.responseText);
+				var brojTelefona = document.getElementById("telefon").value.split('+').join("");
+				if(brojTelefona.substr(0, 1) == json[0].callingCodes || brojTelefona.substr(0, 2) == json[0].callingCodes || brojTelefona.substr(0, 3) == json[0].callingCodes || brojTelefona.substr(0, 4) == json[0].callingCodes)
+				{
+					validno = true;
+				}
+				else
+				{
+					alert("Pozivni broj nije ispravan za unesenu drzavu.");
+				}
+			}
+		}
+		ajax.send();
+		return validno;	
+	}
+
 	function dodaj()
 	{
-		if(validirajNaslov() && validirajURL() && validirajAlt() && validirajTekst() )
+		if(validirajNaslov() && validirajURL() && validirajAlt() && validirajTekst() && validirajPozivniBroj() )
 			alert("Uspješno ste dodali vijest.")
 		else alert("Neka od vrijednosti nije ispravno unesena!");
 		return true;
