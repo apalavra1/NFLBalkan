@@ -170,6 +170,10 @@
 	</nav>
 	
 	<div id="content">
+		<form action="pocetna.php" method="post">
+			<input type="submit" id="vrijeme" name="vrijeme" value="Sortiraj vremenski">
+			<input type="submit" id="abc" name="abc" value="Sortiraj abecedno"><br>
+		</form>
 		<section>
 
 			<article class="other_news">
@@ -291,11 +295,31 @@
 									'tekst' => $niz[3 + $i * 5], 
 									'datum' => $niz[4 + $i * 5]);
 				}
-				function sortFunction( $a, $b ) 
+
+				function sortVrijeme( $a, $b ) 
 				{
    		 			return strtotime($b["datum"]) - strtotime($a["datum"]);
 				}
-				usort($data, "sortFunction");
+
+				function sortAbc( $a, $b )
+				{
+					return strcmp($a["naslov"], $b["naslov"]);
+ 				}
+
+ 				if(!isset($_POST['vrijeme']) && !isset($_POST['abc']))
+ 				{
+ 					usort($data, "sortVrijeme");
+ 				}
+				else if(isset($_POST['vrijeme']))
+				{ 
+					usort($data, "sortVrijeme");
+				}
+				
+				else if(isset($_POST['abc']))
+				{
+					usort($data, "sortAbc");
+				}
+
 				for($i = 0; $i < count($data); $i++)
 				{
 					print("<article class='other_news'>");

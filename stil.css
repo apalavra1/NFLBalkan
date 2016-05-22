@@ -196,6 +196,19 @@ aside > img {
 	text-align: left;
 }
 
+#content > form > input {
+	background-color: #B8B8B8;
+	float: left;
+	margin-bottom: 1%;
+	margin-left: 0.9%;
+	width: 33.6%;
+	height: 3%;
+	color: #383838;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: "Comic Sans MS", sans-serif;
+}
+
 footer {
 	width: 100%;
     clear: both;
