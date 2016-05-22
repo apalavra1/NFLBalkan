@@ -179,7 +179,7 @@
             $tekst = htmlentities($_POST['tekst']);
             $tekst = str_replace(",", "&#44;", $tekst);
 
-            $datum = date("d.m.Y");
+            $datum = date("Y-m-d");
             $vrijeme = date("H:i:s");
 
             $telefon = htmlentities($_POST['telefon']);
@@ -191,7 +191,7 @@
             }
             else
             {
-	            $nova = $naslov.",".$slika.",".$alt.",".$tekst.",".$datum.",".$vrijeme."\r\n";
+	            $nova = $naslov.",".$slika.",".$alt.",".$tekst.",".$datum." ".$vrijeme.",";
 	            array_push($vijesti, $nova);
 	            file_put_contents("vijesti.csv", $vijesti);
 	            $message = "Uspješno ste dodali vijest.";

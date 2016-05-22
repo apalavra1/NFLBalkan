@@ -274,9 +274,45 @@
 				<h3>CJ2K ostaje u Arizoni</h3>
 				<img src="http://sportsperspectives.com/wp-content/uploads/2016/03/chris-johnson.jpg" alt="Chris Johnson">
 				<p>Miami Dolphins-i su propustili priliku da potpišu još jednog running back-a. Ian Rapoport je objavio u četvrtak da je Chris Johnson potpisao jednogodišnji ugovor sa Arizona Cardinals-ima vrijedan 3 miliona $, što je potvrdio izvor upoznat sa pregovorima. Tim je kasnije potvrdio dogovor. Rapoport je također izvijestio da je Johnson odbio skori duplo veći iznos od drugog tima.</p>
-				<div hidden class="date_published">February 25, 2016 21:29:00</div><br>
+				<div hidden class="date_published">May 22, 2016 01:26:30</div><br>
 				<div class="published"></div>
 			</article>
+
+			<?php
+				$vijesti = file_get_contents("vijesti.csv");
+				$niz = preg_split("/(,)/", $vijesti);
+				$array = explode(",", $vijesti);
+				$data;
+				for($i = 0; $i < floor(count($array) / 5); $i++)
+				{
+					$data[] = array('naslov' => $niz[0 + $i * 5],
+									'slika' => $niz[1 + $i * 5],
+									'alt' => $niz[2 + $i * 5],
+									'tekst' => $niz[3 + $i * 5], 
+									'datum' => $niz[4 + $i * 5]);
+				}
+				function sortFunction( $a, $b ) 
+				{
+   		 			return strtotime($b["datum"]) - strtotime($a["datum"]);
+				}
+				usort($data, "sortFunction");
+				for($i = 0; $i < count($data); $i++)
+				{
+					print("<article class='other_news'>");
+					print("<h3>");
+					print($data[$i]['naslov']);
+					print("</h3>");
+					print('<img src="');
+					print($data[$i]['slika']);
+					print('"'); print(' alt="');
+					print($data[$i]['alt']); print('">');
+					print("<p>"); 
+					print($data[$i]['tekst']);
+					print('</p><div hidden class="date_published">');
+					print($data[$i]['datum']);
+					print('</div><br><div class="published"></div></article>');
+				}
+			?>
 
 		</section>
 
