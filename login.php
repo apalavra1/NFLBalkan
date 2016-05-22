@@ -141,6 +141,7 @@
             <li><a class="nav" href="./kontakt.php">Kontakt</a></li>
             <?php
                 session_start();
+                ob_start();
                 if(isset($_SESSION['login'])) 
                 {
             ?>
@@ -162,34 +163,35 @@
     <?php
         $msg = '';
 
-        $sadrzaj=file('login.csv');
+        $sadrzaj=file_get_contents("login.csv");
 
         if(isset($_POST['login']) && !empty($_POST['userName']) && !empty($_POST['password'])) 
         {
         
-            $array=explode(',',$sadrzaj[0]);
+            $array=explode(',',$sadrzaj);
 
             if($_POST['userName'] == $array[0] && sha1($_POST['password']) == $array[1]) 
             {
+                $msg = "Uspjesno ste prijavljeni. Vratite se na pocetnu stranicu.";
                 $_SESSION['login'] = true;
                 $_SESSION['userName'] = $array[0];
-
-                header('Refresh: 1; URL = pocetna.php');
+                header('Refresh: 1; URL = ./pocetna.php');
             }
             else 
             {
                 $msg = 'Pogrešan username ili password.';
             }
-      }
+        }
+
     ?>
     <div id="formaLogin">
         <form action="login.php" method="post">
               <br><input id="userName"  name="userName" type="text" required placeholder="Username=admin" /><br><br>
               <input id="pass" name="password" type="password" required placeholder="Password=admin" /><br><br>
               <input id="prijava" type="submit" name="login" value="Prijava"><br>
-        </form>
+              <h4><?php echo $msg; ob_end_flush(); ?></h4> <br>
+        </form>       
     </div>
-    <h4><?php echo $msg; ?></h4> <br>
     <footer>
         © Copyright NFLBalkan.com 2016 <br>
         Sva prava zadržana. Zabranjeno preuzimanje bez dozvole izdavača

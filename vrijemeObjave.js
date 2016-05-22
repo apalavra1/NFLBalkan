@@ -79,5 +79,5 @@
 	function datumObjave(vrijemeObjave)
 	{
 		var vrijeme =  new Date(vrijemeObjave)
-		return "Vijest je objavljena: " + vrijeme.getDate() + "." + vrijeme.getMonth() + "." + vrijeme.getFullYear()+ ".";
+		return "Vijest je objavljena: " + vrijeme.getDate() + "." + (vrijeme.getMonth() + 1) + "." + vrijeme.getFullYear()+ ".";
 	}

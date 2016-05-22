@@ -4,5 +4,5 @@
     unset($_SESSION["password"]);
 	unset($_SESSION['login']);
     session_unset();
-   	header('Refresh: 1; URL = pocetna.php');
+   	header('Refresh: 1; URL = ./pocetna.php');
 ?>
