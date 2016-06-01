@@ -164,23 +164,26 @@
 	<?php
 		if (isset($_POST['dodaj'])) 
 		{
-			date_default_timezone_set("Europe/Sarajevo");
-            $vijesti = file("vijesti.csv");
+			//date_default_timezone_set("Europe/Sarajevo");
+            
+            //$vijesti = file("vijesti.csv");
 
             $naslov = htmlentities($_POST['naslov']);
-            $naslov = str_replace(",", "&#44;", $naslov);
 
             $slika = htmlentities($_POST['slika']);
-            $slika = str_replace(",", "&#44;", $slika);
+
 
             $alt = htmlentities($_POST['alt']);
-            $alt = str_replace(",", "&#44;", $alt);
+
             
             $tekst = htmlentities($_POST['tekst']);
-            $tekst = str_replace(",", "&#44;", $tekst);
 
-            $datum = date("Y-m-d");
-            $vrijeme = date("H:i:s");
+            $komentari = 0;
+
+            if(isset($_POST['komentari'])) $komentari = 1;
+            else $komentari = 0;
+
+            $autor = 1;
 
             $telefon = htmlentities($_POST['telefon']);
 
@@ -191,9 +194,18 @@
             }
             else
             {
-	            $nova = $naslov.",".$slika.",".$alt.",".$tekst.",".$datum." ".$vrijeme.",";
-	            array_push($vijesti, $nova);
-	            file_put_contents("vijesti.csv", $vijesti);
+	            $veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+				$veza->exec("set names utf8");
+				$upit = $veza->prepare("INSERT INTO vijest SET naslov=:naslov, clanak=:clanak, url=:url, alt=:alt, komentari=:komentari, autor=:autor");
+				
+				$upit->bindValue(":naslov", $naslov, PDO::PARAM_STR);
+				$upit->bindValue(":clanak", $tekst, PDO::PARAM_STR);
+				$upit->bindValue(":url", $slika, PDO::PARAM_STR);
+				$upit->bindValue(":alt", $alt, PDO::PARAM_STR);
+				$upit->bindValue(":komentari", $komentari, PDO::PARAM_INT);
+				$upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+
+    			$upit->execute();
 	            $message = "Uspješno ste dodali vijest.";
 	            echo "<script type='text/javascript'>alert('$message');</script>";
             }
@@ -469,6 +481,8 @@
 			<br>
 			<label>Članak (ne smije biti prazno)</label>
 			<textarea id="tekst" name="tekst" placeholder="Članak..." onfocus="validiraj('tekst')"></textarea>
+			<br>
+			<label><input type ="checkbox" id="komentari" name="komentari" value="Omogući komentare" checked>Mogućnost komentarisanja vijesti</label>
 			<br>
 			<input type="submit" id="dodajBtn" name="dodaj" value="Pošalji" onclick="return dodaj()">
 			<br>

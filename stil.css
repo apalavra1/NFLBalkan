@@ -568,6 +568,12 @@ footer {
 	height: 200px;
 }
 
+#komentari {
+	display: block;
+	height: 30px;
+	width: 30px;
+}
+
 #dodajBtn {
 	width: 50%;
 	height: 50px;

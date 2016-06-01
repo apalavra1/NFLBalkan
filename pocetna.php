@@ -176,57 +176,41 @@
 		</form>
 		<section>
 			<?php
-				$vijesti = file_get_contents("vijesti.csv");
-				$niz = preg_split("/(,)/", $vijesti);
-				$array = explode(",", $vijesti);
-				$data;
-				for($i = 0; $i < floor(count($array) / 5); $i++)
-				{
-					$data[] = array('naslov' => $niz[0 + $i * 5],
-									'slika' => $niz[1 + $i * 5],
-									'alt' => $niz[2 + $i * 5],
-									'tekst' => $niz[3 + $i * 5], 
-									'datum' => $niz[4 + $i * 5]);
-				}
-
-				function sortVrijeme( $a, $b ) 
-				{
-   		 			return strtotime($b["datum"]) - strtotime($a["datum"]);
-				}
-
-				function sortAbc( $a, $b )
-				{
-					return strcmp($a["naslov"], $b["naslov"]);
- 				}
-
- 				if(!isset($_POST['vrijeme']) && !isset($_POST['abc']))
+				$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+				$veza->exec("set names utf8");
+				if(!isset($_POST['vrijeme']) && !isset($_POST['abc']))
  				{
- 					usort($data, "sortVrijeme");
+ 					$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest order by vrijeme desc");
  				}
 				else if(isset($_POST['vrijeme']))
 				{ 
-					usort($data, "sortVrijeme");
+					$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest order by vrijeme desc");
 				}
 				
 				else if(isset($_POST['abc']))
 				{
-					usort($data, "sortAbc");
+					$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest order by naslov");
 				}
-
-				for($i = 0; $i < count($data); $i++)
+				if(!$upit)
+				{
+					$greska = $veza->errorInfo();
+					print "SQL greska: " . $greska[2];
+					exit();
+				}
+				foreach ($upit as $vijest) 
 				{
 					print("<article class='other_news'>");
 					print("<h3>");
-					print($data[$i]['naslov']);
+					print($vijest['naslov']);
 					print("</h3>");
 					print('<img src="');
-					print($data[$i]['slika']);
+					print($vijest['url']);
 					print('"'); print(' alt="');
-					print($data[$i]['alt']); print('">');
+					print($vijest['alt']); print('">');
 					print("<p>"); 
-					print($data[$i]['tekst']);
+					print($vijest['clanak']);
 					print('</p><div hidden class="date_published">');
-					print($data[$i]['datum']);
+					print(date('r', $vijest['vrijeme2']));
 					print('</div><br><div class="published"></div></article>');
 				}
 			?>
