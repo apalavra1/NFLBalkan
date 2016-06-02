@@ -183,8 +183,6 @@
             if(isset($_POST['komentari'])) $komentari = 1;
             else $komentari = 0;
 
-            $autor = 1;
-
             $telefon = htmlentities($_POST['telefon']);
 
             if(empty($naslov) || !preg_match("/\.(jpeg|jpg|gif|png)/", $slika) || empty($alt) || empty($tekst))
@@ -196,6 +194,16 @@
             {
 	            $veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
 				$veza->exec("set names utf8");
+
+				$upitAutor = $veza->prepare("SELECT id FROM autor WHERE username=:username");
+            	
+            	$upitAutor->bindValue(":username", $_SESSION['userName'], PDO::PARAM_STR);
+
+            	$upitAutor->execute();
+            	$korisnik = $upitAutor->fetch();
+            	
+            	$autor = $korisnik['id'];
+
 				$upit = $veza->prepare("INSERT INTO vijest SET naslov=:naslov, clanak=:clanak, url=:url, alt=:alt, komentari=:komentari, autor=:autor");
 				
 				$upit->bindValue(":naslov", $naslov, PDO::PARAM_STR);

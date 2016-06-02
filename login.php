@@ -163,18 +163,28 @@
     <?php
         $msg = '';
 
-        $sadrzaj=file_get_contents("login.csv");
 
         if(isset($_POST['login']) && !empty($_POST['userName']) && !empty($_POST['password'])) 
         {
         
-            $array=explode(',',$sadrzaj);
+            $user = htmlEntities($_POST['userName'], ENT_QUOTES);
+            $pass = sha1($_POST['password']);
+            
+            $veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8","nfluser", "nflpass");
+            $veza->exec("set names utf8");
+            $upit = $veza->prepare("SELECT username, password FROM autor WHERE username=:username and password=:password");
+            
+            $upit->bindValue(":username", $user, PDO::PARAM_STR);
+            $upit->bindValue(":password", $pass, PDO::PARAM_STR);
 
-            if($_POST['userName'] == $array[0] && sha1($_POST['password']) == $array[1]) 
+            $upit->execute();
+            $korisnik = $upit->fetch();
+
+            if($user == $korisnik['username'] and $pass == $korisnik['password'])
             {
                 $msg = "Uspjesno ste prijavljeni. Vratite se na pocetnu stranicu.";
                 $_SESSION['login'] = true;
-                $_SESSION['userName'] = $array[0];
+                $_SESSION['userName'] = $user;
                 header('Refresh: 1; URL = ./pocetna.php');
             }
             else 

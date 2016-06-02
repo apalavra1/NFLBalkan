@@ -115,12 +115,15 @@ nav > ul > li {
 	height: 460px;
 }
 
-#content > section > #featured_news > img {
+
+
+#featured_news > img {
     width: 100%;
-    max-height: 320px;
+    max-height: 300px;
+    margin-bottom: 10px;
 }
 
-#content > section > article > img {
+.other_news > img {
     width: 100%;
     max-height: 170px;
     margin-bottom: 10px;
@@ -580,8 +583,113 @@ footer {
 	margin-bottom: 3%;
 }
 
-#drzava{
+#drzava {
 	width: 50%;
 	display: block;
 	margin: auto;
 }
+
+
+/*----------------Prikaz vijesti---------------*/
+
+#komentar_forma {
+	margin-top: 2%;
+	background-color: #E8E8E8;
+	width: 97.5%;
+	margin-left: 1%;
+	margin-bottom: 2%; 
+}
+
+#komentar_forma > form > label {
+	margin-left: 1%;
+}
+
+#komentar_forma > form > textarea {
+	margin-bottom: 2%;
+	width: 97.5%;
+	max-width: 97.5%;
+	max-height: 70px;
+	height: 70px;
+}
+
+#komentarBtn {
+	border-radius: 3px;
+	border: 2px solid #000066;
+    line-height: 31px;
+	background-color: #000066;
+	width: 30%;
+    display: block;
+    color: white;
+    margin-right: 1.5%;
+    /*margin-bottom: 2%;*/
+}
+
+.komentar_container {
+	border: 1px solid #E8E8E8;
+	margin-top: 2%;
+	background-color: #E8E8E8;
+	width: 97.5%;
+	margin-left: 1%;
+	margin-bottom: 2%; 
+}
+
+.komentar_container > small {
+	margin-left: 1%;
+	margin-top: 1%;
+}
+
+.komentar_container > p {
+	margin: 2%;
+}
+
+.odgovor_forma {
+	margin-left: 18.5%;
+	margin-top: 2%;
+	background-color: #E8E8E8;
+	width: 80%;
+	margin-bottom: 2%; 
+}
+
+.odgovor_forma > form > label {
+	margin-left: 1%;
+}
+
+.odgovor_forma > form > textarea {
+	margin-bottom: 2%;
+	width: 97.5%;
+	max-width: 97.5%;
+	max-height: 50px;
+	height: 50px;
+}
+
+#odgovorBtn {
+	border-radius: 3px;
+	border: 2px solid #000066;
+    line-height: 20px;
+	background-color: #000066;
+	width: 15%;
+    display: block;
+    color: white;
+    margin-right: 1.5%;
+}
+
+
+.odgovor_container {
+	margin-left: 18.5%;
+	border: 1px solid #E8E8E8;
+	margin-top: 2%;
+	background-color: #E8E8E8;
+	width: 80%;
+	margin-bottom: 2%; 
+}
+
+.odgovor_container > small {
+	margin-left: 1%;
+	margin-top: 1%;
+}
+
+.odgovor_container > p {
+	margin: 2%;
+}
+
+

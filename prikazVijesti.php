@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Naslovnica NFLBalkan</title>
+	<title>Detaljni prikaz vijesti</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
 	<script src="vrijemeObjave.js"></script>
@@ -141,12 +141,6 @@
 			<li><a class="nav" href="./timovi.php">Timovi</a></li>
 			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
 			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
-			<li><select id="vijesti_filter" onchange="filtriraj(this)">
-                <option class="opcija_filter" value="sve">Sve vijesti</option>
-                <option class="opcija_filter" value="danasnje">Današnje vijesti</option>
-                <option class="opcija_filter" value="ove_sedmice">Vijesti ove sedmice</option>
-                <option class="opcija_filter" value="ovog_mjeseca">Vijesti ovog mjeseca</option>
-            </select></li>
             <?php
             	session_start();
             	if(isset($_SESSION['login'])) 
@@ -170,67 +164,29 @@
 	</nav>
 	
 	<div id="content">
-		<form method="post">
-			<input type="submit" id="vrijeme" name="vrijeme" value="Sortiraj vremenski">
-			<input type="submit" id="abc" name="abc" value="Sortiraj abecedno"><br>
-		</form>
 		<section>
 			<?php
+				$ID;
+				$komentarID;
 				$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
 				$veza->exec("set names utf8");
-				if(!isset($_GET['autor']))
-				{
-					if(!isset($_POST['vrijeme']) && !isset($_POST['abc']))
-	 				{
-	 					$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest order by vrijeme desc");
-	 					header('URL = ./pocetna.php');
-	 				}
-					else if(isset($_POST['vrijeme']))
-					{ 
-						$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest order by vrijeme desc");
-						header('URL = ./pocetna.php');
-					}
-					
-					else if(isset($_POST['abc']))
-					{
-						$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest order by naslov");
-						header('URL = ./pocetna.php');
-					}
-				}
-				else
-				{
-					$IDautora = $_GET['autor'];
-					if(!isset($_POST['vrijeme']) && !isset($_POST['abc']))
-	 				{
-	 					$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, komentari from vijest where autor = ".$IDautora." order by vrijeme desc");
-	 					header('URL = ./pocetna.php?autor='.urlencode($IDautora));
-	 				}
-					else if(isset($_POST['vrijeme']))
-					{ 
-						$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, komentari from vijest where autor = ".$IDautora." order by vrijeme desc");
-						header('URL = ./pocetna.php?autor='.urlencode($IDautora));
-					}
-					
-					else if(isset($_POST['abc']))
-					{
-						$upit = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, komentari from vijest where autor = ".$IDautora." order by naslov");
-						header('URL = ./pocetna.php?autor='.urlencode($IDautora));
-					}
-				}
+				$upitVijesti = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest where id = ".$_GET['vijest']);
 
-				if(!$upit)
+				$mogucnostKomentarisanja;
+				
+				foreach ($upitVijesti as $vijest) 
 				{
-					$greska = $veza->errorInfo();
-					print "SQL greska: " . $greska[2];
-					exit();
-				}
-				foreach ($upit as $vijest) 
-				{
+					$upitAutorVijesti = $veza->query("select username from autor where id = ".$vijest['autor']);
+					$userAutoraVijesti = $upitAutorVijesti->fetchColumn();
+
+					$IDautora = $vijest['autor'];
 					$ID = $vijest['id'];
-					print("<article class='other_news'>");
+
+					print("<article id='featured_news'>");
 					print("<h3>");
-					print("<a href='prikazVijesti.php?vijest=$ID'>".$vijest['naslov']."</a>");
+					print($vijest['naslov']);
 					print("</h3>");
+					print("<a href='pocetna.php?autor=$IDautora'>".$userAutoraVijesti."</a>");
 					print('<img src="');
 					print($vijest['url']);
 					print('"'); print(' alt="');
@@ -240,8 +196,106 @@
 					print('</p><div hidden class="date_published">');
 					print(date('r', $vijest['vrijeme2']));
 					print('</div><br><div class="published"></div></article>');
+
+					$mogucnostKomentarisanja = $vijest['komentari'];
 				}
+
+				if(isset($_POST['komentarBtn']))
+				{
+					$komentar = htmlentities($_POST['komentar']);
+					$vijestID = $ID;
+					$upitAutor = $veza->prepare("SELECT id FROM autor WHERE username=:username");
+            	
+            		$upitAutor->bindValue(":username", $_SESSION['userName'], PDO::PARAM_STR);
+
+            		$upitAutor->execute();
+            		$korisnik = $upitAutor->fetch();
+            	
+            		$autor = $korisnik['id'];
+					
+					$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+					$veza->exec("set names utf8");
+					$upit = $veza->prepare("INSERT INTO komentar SET tekst=:komentar, vijest=:vijestID, autor=:autor");
+					
+					$upit->bindValue(":komentar", $komentar, PDO::PARAM_STR);
+					$upit->bindValue(":vijestID", $vijestID, PDO::PARAM_INT);
+					$upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+
+	    			$upit->execute();
+
+	    			header('URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
+				}
+
+				if(isset($_POST['odgovorBtn']))
+				{
+					$odgovor = htmlentities($_POST['odgovor']);
+					$vijestID = $ID;
+					$upitAutor = $veza->prepare("SELECT id FROM autor WHERE username=:username");
+            	
+            		$upitAutor->bindValue(":username", $_SESSION['userName'], PDO::PARAM_STR);
+
+            		$upitAutor->execute();
+            		$korisnik = $upitAutor->fetch();
+            	
+            		$autor = $korisnik['id'];
+					$odgovor_na = $_POST['komentarID']; 
+					
+					$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+					$veza->exec("set names utf8");
+					$upit = $veza->prepare("INSERT INTO komentar SET tekst=:odgovor, vijest=:vijestID, autor=:autor, odgovor_na=:odgovor_na");
+					
+					$upit->bindValue(":odgovor", $odgovor, PDO::PARAM_STR);
+					$upit->bindValue(":vijestID", $vijestID, PDO::PARAM_INT);
+					$upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+					$upit->bindValue(":odgovor_na", $odgovor_na, PDO::PARAM_INT);
+
+	    			$upit->execute();
+
+	    			header('URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
+				}
+				
+				if($mogucnostKomentarisanja == 1)
+				{
+					print('<div id="komentar_forma">');
+					print('<form method="post">');
+					print('<br><label>Komentar</label><br><br>');
+					print('<textarea id="komentar" name="komentar" placeholder="Unesite svoj komentar..."></textarea>');
+					print('<input type="submit" id="komentarBtn" name="komentarBtn" value="Komentariši"><br>');
+					print('</form>');
+					print('</div><br><h3>Komentari</h3>');
+
+					$upitKomentari = $veza->query("select id, tekst, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor from komentar where vijest = ".$_GET['vijest']." and odgovor_na is null");
+					foreach ($upitKomentari as $komentar) 
+					{
+						$upitAutor = $veza->query("select username from autor where id = ".$komentar['autor']);
+						$userAutora = $upitAutor->fetchColumn();
+						
+						print '<div class="komentar_container">';
+						print '<small id="autor">'.$userAutora.'</small>';
+						print '<p id="tekst" name="komentar" readonly>'.$komentar['tekst'].'</p></div>';
+
+						$upitOdgovori = $veza->query("select id, tekst, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, vijest from komentar where odgovor_na = ".$komentar['id']);
+						foreach ($upitOdgovori as $odgovor)
+						{
+							$upitAutorOdgovor = $veza->query("select username from autor where id = ".$odgovor['autor']);
+							$userAutoraOdgovor = $upitAutorOdgovor->fetchColumn();
+							print '<div class="odgovor_container">';
+							print '<small id="autor">'.$userAutoraOdgovor.'</small>';
+							print '<p id="tekst" name="komentar" readonly>'.$odgovor['tekst'].'</p></div>';
+						}
+
+						print '<div class="odgovor_forma">';
+						print('<form method="post">');
+						print('<br><textarea id="odgovor" name="odgovor" placeholder="Unesite svoj odgovor..."></textarea>');
+						print('<input type="submit" id="odgovorBtn" name="odgovorBtn" value="Odgovori"><br>');
+						print "<input type='hidden' name='komentarID' value=".$komentar['id'].">"; 
+						print('</form>');
+						print('</div><br>');
+					}
+				}
+										 
 			?>
+
 
 		</section>
 
@@ -267,6 +321,3 @@
 </div>
 </body>
 </html>
-
-
-
