@@ -272,7 +272,18 @@
 						
 						print '<div class="komentar_container">';
 						print '<small id="autor">'.$userAutora.'</small>';
-						print '<p id="tekst" name="komentar" readonly>'.$komentar['tekst'].'</p></div>';
+						print '<p id="tekst" name="komentar" readonly>'.$komentar['tekst'].'</p>';
+						if(isset($_SESSION['login']))
+						{
+							if($_SESSION['userName'] == "admin")
+							{ 
+								print '<form method="post">';
+								print '<input type="submit" id="obrisiKomentar" name="obrisiKomentar" value="Obriši">';
+								print '<input type="hidden" name="idKomentara" value='.$komentar['id'].'>';
+								print '</form>';
+							}	
+						}
+						print '</div>';
 
 						$upitOdgovori = $veza->query("select id, tekst, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, vijest from komentar where odgovor_na = ".$komentar['id']);
 						foreach ($upitOdgovori as $odgovor)
@@ -281,7 +292,18 @@
 							$userAutoraOdgovor = $upitAutorOdgovor->fetchColumn();
 							print '<div class="odgovor_container">';
 							print '<small id="autor">'.$userAutoraOdgovor.'</small>';
-							print '<p id="tekst" name="komentar" readonly>'.$odgovor['tekst'].'</p></div>';
+							print '<p id="tekst" name="komentar" readonly>'.$odgovor['tekst'].'</p>';
+							if(isset($_SESSION['login']))
+							{
+								if($_SESSION['userName'] == "admin")
+								{ 
+									print '<form method="post">';
+									print '<input type="submit" id="obrisiOdgovor" name="obrisiOdgovor" value="Obriši">';
+									print '<input type="hidden" name="idOdgovora" value='.$odgovor['id'].'>';
+									print '</form>';
+								}	
+							}
+							print '</div>';
 						}
 
 						print '<div class="odgovor_forma">';
@@ -291,6 +313,19 @@
 						print "<input type='hidden' name='komentarID' value=".$komentar['id'].">"; 
 						print('</form>');
 						print('</div><br>');
+					}
+
+					if(isset($_POST['obrisiKomentar']))
+					{
+						$upitObrisiOdgovore = $veza->query("DELETE from komentar where odgovor_na = ".$_POST['idKomentara']);
+						$upitObrisi = $veza->query("DELETE from komentar where id = ".$_POST['idKomentara']);
+						header('Refresh: 0; URL = ./prikazVijesti.php?vijest='.urlencode($_GET['vijest']));
+					}
+
+					if(isset($_POST['obrisiOdgovor']))
+					{
+						$upitObrisi = $veza->query("DELETE from komentar where id = ".$_POST['idOdgovora']);
+						header('Refresh: 0; URL = ./prikazVijesti.php?vijest='.urlencode($_GET['vijest']));
 					}
 				}
 										 

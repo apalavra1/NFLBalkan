@@ -217,7 +217,7 @@
 						header('URL = ./pocetna.php?autor='.urlencode($IDautora));
 					}
 				}
-
+				$ID;
 				if(!$upit)
 				{
 					$greska = $veza->errorInfo();
@@ -239,7 +239,34 @@
 					print($vijest['clanak']);
 					print('</p><div hidden class="date_published">');
 					print(date('r', $vijest['vrijeme2']));
-					print('</div><br><div class="published"></div></article>');
+					print('</div><br><div class="published"></div>');
+					if(isset($_SESSION['login']))
+					{
+						if($_SESSION['userName'] == "admin")
+						{ 
+							print '<form method="post">';
+							print '<input type="submit" id="obrisiVijest" name="obrisi" value="Obriši">';
+							print '<input type="hidden" name="idVijesti" value='.$vijest['id'].'>';
+							print '</form>';
+						}	
+					}
+					print('</article>');
+				}
+
+				if(isset($_POST['obrisi']))
+				{
+					$upitObrisiOdgovore = $veza->query("DELETE from komentar where odgovor_na is not null and vijest = ".$_POST['idVijesti']);
+					$upitObrisiKomentare = $veza->query("DELETE from komentar where odgovor_na is null and vijest = ".$_POST['idVijesti']);
+					$upitObrisi = $veza->query("DELETE from vijest where id = ".$_POST['idVijesti']);
+					if(!isset($_GET['autor']))
+					{ 	
+						header('Refresh: 0; URL = ./pocetna.php');
+					}	
+					else
+					{
+						$IDautora = $_GET['autor'];
+						header('Refresh: 0; URL = ./pocetna.php?autor='.urlencode($IDautora));
+					}
 				}
 			?>
 

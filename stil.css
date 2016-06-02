@@ -167,6 +167,17 @@ nav > ul > li {
     height: 370px;
 }
 
+#obrisiVijest {
+	border-radius: 3px;
+	border: 2px solid #C80000;
+    line-height: 20px;
+	background-color: #C80000;
+	width: 20%;
+    display: block;
+    color: white;
+    margin-right: 1.5%;
+}
+
 .published {
 	position: relative;
 	font-family: sans-serif;
@@ -642,6 +653,18 @@ footer {
 	margin: 2%;
 }
 
+#obrisiKomentar {
+	border-radius: 3px;
+	border: 2px solid #C80000;
+    line-height: 20px;
+	background-color: #C80000;
+	width: 20.5%;
+    display: block;
+    color: white;
+    margin-right: 1%;
+    margin-bottom: 1%;
+}
+
 .odgovor_forma {
 	margin-left: 18.5%;
 	margin-top: 2%;
@@ -690,6 +713,18 @@ footer {
 
 .odgovor_container > p {
 	margin: 2%;
+}
+
+#obrisiOdgovor {
+	border-radius: 3px;
+	border: 2px solid #C80000;
+    line-height: 20px;
+	background-color: #C80000;
+	width: 15.5%;
+    display: block;
+    color: white;
+    margin-right: 1%;
+    margin-bottom: 1%;
 }
 
 
