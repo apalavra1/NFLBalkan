@@ -528,7 +528,7 @@ footer {
 }
 
 
-#formaLogin > form > input[type="text"], input[type="password"] 
+#userName, #pass 
 {
 	border-radius: 3px;
     border: 2px solid #000066;
@@ -635,6 +635,28 @@ footer {
     /*margin-bottom: 2%;*/
 }
 
+#zabraniBtn {
+	border-radius: 3px;
+	border: 2px solid #C80000;
+    line-height: 31px;
+	background-color: #C80000;
+	width: 30%;
+    display: block;
+    color: white;
+    margin: auto;
+}
+
+#omoguciBtn {
+	border-radius: 3px;
+	border: 2px solid green;
+    line-height: 31px;
+	background-color: green;
+	width: 30%;
+    display: block;
+    color: white;
+    margin: auto;
+}
+
 .komentar_container {
 	border: 1px solid #E8E8E8;
 	margin-top: 2%;
@@ -726,5 +748,85 @@ footer {
     margin-right: 1%;
     margin-bottom: 1%;
 }
+
+
+/*------------------Autori-----------------------*/
+
+#formaAutor > form {
+	font-family: sans-serif;
+	text-align: center;
+	margin-top: 50px !important;
+	margin-bottom: 100px !important;
+	margin: auto;
+	width: 50%;
+	background-color: #A8A8A8;
+}
+
+#formaAutor > form > label, input, textarea {
+	width: 50%;
+	display: block;
+	margin: auto;
+}
+
+#formaAutor > form > textarea {
+	max-width: 50%;
+	max-height: 200px;
+	height: 200px;
+}
+
+
+#spasiAutora {
+	width: 50%;
+	height: 50px;
+	margin-bottom: 3%;
+}
+
+#drzava {
+	width: 50%;
+	display: block;
+	margin: auto;
+}
+
+
+#formaSviAutori > form {
+	font-family: sans-serif;
+	text-align: center;
+	margin-top: 50px !important;
+	margin-bottom: 100px !important;
+	margin: auto;
+	width: 50%;
+	background-color: #A8A8A8;
+}
+
+#formaSviAutori > form > select {
+	width: 50%;
+	display: block;
+	margin: auto;
+}
+
+#obrisiAutora {
+	border-radius: 3px;
+	border: 2px solid #C80000;
+    line-height: 20px;
+	background-color: #C80000;
+	width: 15.5%;
+    display: block;
+    color: white;
+    margin-bottom: 1%;
+}
+
+
+#ucitajAutora {
+	border-radius: 3px;
+	border: 2px solid green;
+    line-height: 20px;
+	background-color: green;
+	width: 15.5%;
+    display: block;
+    color: white;
+    margin-bottom: 1%;
+}
+
+
 
 

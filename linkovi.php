@@ -141,6 +141,17 @@
 			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
 			<?php
             	session_start();
+        		if(isset($_SESSION['login']))
+				{
+					if($_SESSION['userName'] == "admin")
+					{
+      		?>
+      		<li id="autori"><a class="nav" href="./autori.php">Autori</a></li>
+      		<?php
+  					}
+        		}
+            ?>
+			<?php
             	if(isset($_SESSION['login'])) 
             	{
             ?>

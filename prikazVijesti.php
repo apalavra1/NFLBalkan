@@ -141,8 +141,19 @@
 			<li><a class="nav" href="./timovi.php">Timovi</a></li>
 			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
 			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
-            <?php
+			<?php
             	session_start();
+        		if(isset($_SESSION['login']))
+				{
+					if($_SESSION['userName'] == "admin")
+					{
+      		?>
+      		<li id="autori"><a class="nav" href="./autori.php">Autori</a></li>
+      		<?php
+  					}
+        		}
+            ?>
+            <?php
             	if(isset($_SESSION['login'])) 
             	{
             ?>
@@ -253,11 +264,38 @@
 
 	    			header('URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
 				}
+
+				if(isset($_POST['zabraniBtn'])) 
+				{
+					$vijestID = $ID;
+					$upitZabrani = $veza->prepare("UPDATE vijest SET komentari = 0 where id=:id");
+					$upitZabrani->bindValue(":id", $vijestID, PDO::PARAM_INT);
+
+					$upitZabrani->execute();
+					header('Refresh : 0; URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
+				}
+
+				if(isset($_POST['omoguciBtn']))
+				{
+					$vijestID = $ID;
+					$upitOmoguci = $veza->prepare("UPDATE vijest SET komentari = 1 where id=:id");
+					$upitOmoguci->bindValue(":id", $vijestID, PDO::PARAM_INT);
+
+					$upitOmoguci->execute();
+					header('Refresh : 0; URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
+				}
 				
 				if($mogucnostKomentarisanja == 1)
 				{
 					print('<div id="komentar_forma">');
 					print('<form method="post">');
+					if(isset($_SESSION['login']))
+					{
+						if($_SESSION['userName'] == "admin")
+						{ 
+							print('<br><input type="submit" id="zabraniBtn" name="zabraniBtn" value="Zabrani komentare"><br>');
+						}
+					}
 					print('<br><label>Komentar</label><br><br>');
 					print('<textarea id="komentar" name="komentar" placeholder="Unesite svoj komentar..."></textarea>');
 					print('<input type="submit" id="komentarBtn" name="komentarBtn" value="Komentariši"><br>');
@@ -326,6 +364,18 @@
 					{
 						$upitObrisi = $veza->query("DELETE from komentar where id = ".$_POST['idOdgovora']);
 						header('Refresh: 0; URL = ./prikazVijesti.php?vijest='.urlencode($_GET['vijest']));
+					}
+				}
+				else
+				{
+					if(isset($_SESSION['login']))
+					{
+						if($_SESSION['userName'] == "admin")
+						{ 
+							print('<form method="post">');
+							print('<br><input type="submit" id="omoguciBtn" name="omoguciBtn" value="Omogući komentare"><br>');
+							print('</form>');
+						}
 					}
 				}
 										 

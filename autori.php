@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Dodavanje vijesti</title>
+	<title>Autori</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="stil.css">
-	<script src="validacijaVijesti.js"></script>
+	<script src="validacija.js"></script>
 </head>
 <body>
 <div hidden id="prijavljen"></div>
@@ -141,6 +141,8 @@
 			<li><a class="nav" href="./linkovi.php">Linkovi</a></li>
 			<li><a class="nav" href="./kontakt.php">Kontakt</a></li>
 			<?php
+				$korisnikID;
+				$promjena = true;
             	session_start();
         		if(isset($_SESSION['login']))
 				{
@@ -172,78 +174,164 @@
       		?>
 		</ul>
 	</nav>
+	
 	<?php
-		if (isset($_POST['dodaj'])) 
+		$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+		$veza->exec("set names utf8");
+
+		$upitAutori = $veza->query("SELECT * from autor");
+
+		print "<div id='formaSviAutori'>";
+		print "<form action='autori.php' method='post'>";
+		print "<br><select name='autor' id='autor'>";
+		foreach ($upitAutori as $autor) 
 		{
-			//date_default_timezone_set("Europe/Sarajevo");
-            
-            //$vijesti = file("vijesti.csv");
-
-            $naslov = htmlentities($_POST['naslov']);
-
-            $slika = htmlentities($_POST['slika']);
+			print "<option value=".$autor['id'].">".$autor['username']."</option>";
+		}
+		print "</select><br>";
+		print '<input type="submit" id="ucitajAutora" name="ucitajAutora" value="Učitaj autora"><br>';
+		print '<input type="submit" id="obrisiAutora" name="obrisiAutora" value="Obriši">';
 
 
-            $alt = htmlentities($_POST['alt']);
+		print "<br></form>";
+		print "</div>";
+	?>
 
-            
-            $tekst = htmlentities($_POST['tekst']);
+	<?php
 
-            $komentari = 0;
+		if(isset($_POST['obrisiAutora']))
+		{
+			$upitObrisiOdgovore = $veza->query("DELETE from komentar where odgovor_na is not null and autor = ".$_POST['autor']);
+			
+			$upitObrisiKomentare = $veza->query("DELETE from komentar where odgovor_na is null and autor = ".$_POST['autor']);
 
-            if(isset($_POST['komentari'])) $komentari = 1;
-            else $komentari = 0;
+			$upitObrisiVijesti = $veza->query("DELETE from vijest where autor = ".$_POST['autor']);
 
-            $telefon = htmlentities($_POST['telefon']);
+			$upitObrisiAutora = $veza->query("DELETE from autor where id = ".$_POST['autor']);
 
-            if(empty($naslov) || !preg_match("/\.(jpeg|jpg|gif|png)/", $slika) || empty($alt) || empty($tekst))
-            {
-            	$message = "Neki od podataka nije ispravno unesen, pratite upute iznad svakog od polja.";
-				echo "<script type='text/javascript'>alert('$message');</script>";
-            }
-            else
-            {
-	            $veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
-				$veza->exec("set names utf8");
+			header('Refresh: 0; URL = ./autori.php');
+		}
+		$korisnik;
+		if(isset($_POST['ucitajAutora']))
+		{
+			$promjena = false;
+			$upitDajAutora = $veza->prepare("SELECT id, username, password, ime, prezime, drzava, telefon, email from autor where id =:id");
+			$upitDajAutora->bindValue(":id", $_POST['autor'], PDO::PARAM_INT);
+			$upitDajAutora->execute();
+            $korisnik = $upitDajAutora->fetch();
 
-				$upitAutor = $veza->prepare("SELECT id FROM autor WHERE username=:username");
-            	
-            	$upitAutor->bindValue(":username", $_SESSION['userName'], PDO::PARAM_STR);
+            $korisnikID = $korisnik['id'];
+        }
 
-            	$upitAutor->execute();
-            	$korisnik = $upitAutor->fetch();
-            	
-            	$autor = $korisnik['id'];
-
-				$upit = $veza->prepare("INSERT INTO vijest SET naslov=:naslov, clanak=:clanak, url=:url, alt=:alt, komentari=:komentari, autor=:autor");
-				
-				$upit->bindValue(":naslov", $naslov, PDO::PARAM_STR);
-				$upit->bindValue(":clanak", $tekst, PDO::PARAM_STR);
-				$upit->bindValue(":url", $slika, PDO::PARAM_STR);
-				$upit->bindValue(":alt", $alt, PDO::PARAM_STR);
-				$upit->bindValue(":komentari", $komentari, PDO::PARAM_INT);
-				$upit->bindValue(":autor", $autor, PDO::PARAM_INT);
-
-    			$upit->execute();
-	            $message = "Uspješno ste dodali vijest.";
-	            echo "<script type='text/javascript'>alert('$message');</script>";
-            }
-    	}
 
 	?>
-	<div id="formaVijest">
-		<form action="novaVijest.php" method="post">
-			<br><label>Naslov(ne smije biti prazno)</label>
-			<input id="naslov" type="text" placeholder="Naslov" name="naslov" onfocus="validiraj('naslov')">
+	
+	<div id="formaAutor">
+		<form action="autori.php" method="post">
 			<br>
-			<label>URL za sliku(mora biti ispravan i slika)</label>
-			<input id="slika" type="url" placeholder="URL slike" name="slika" onfocus="validiraj('slika')">
+			<label>Korisničko ime (ne smije biti prazno)</label>
+
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="user" type="text" placeholder="Korisničko ime" name="user" onfocus="validiraj("username")" value='.$korisnik['username'].'>';
+				else { 
+			?>
+			<input id="user" type="text" placeholder="Korisničko ime" name="user" onfocus="validiraj('username')">
+
+			<?php
+
+				}
+
+			?>	
+
 			<br>
-			<label>Alt tag za sliku(ne smije biti prazno)</label>
-			<input id="alt" type="text" placeholder="ALT tag" name="alt" onfocus="validiraj('alt')">
+			<label>Korisnička šifra (najmanje 4 karaktera)</label>
+
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="password" type="password" placeholder="Korisnička šifra" name="password" onfocus="validiraj("password")" value='.$korisnik['password'].'>';
+				else {
+			?>
+			<input id="password" type="password" placeholder="Korisnička šifra" name="password" onfocus="validiraj('password')">
+
+			<?php
+
+				}
+
+			?>
+
+			<br>
+			<label>Potvrdite šifru (mora biti isto kao i korisnička šifra)</label>
+			
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="potvrda" type="password" placeholder="Potvrda korisničke šifre" name="potvrda" onfocus="validiraj("potvrda")" value='.$korisnik['password'].'>';
+				else {
+			?>
+			<input id="potvrda" type="password" placeholder="Potvrda korisničke šifre" name="potvrda" onfocus="validiraj('potvrda')">
+
+			<?php
+
+				}
+
+			?>
+
+			<br>
+			<label>Ime (prvo slovo veliko, najmanje 2 slova)</label>
+
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="ime" type="text" placeholder="Ime" name="ime" onfocus="validiraj("ime")" value='.$korisnik['ime'].'>';
+				else {
+			?>
+			<input id="ime" type="text" placeholder="Ime" name="ime" onfocus="validiraj('ime')">
+
+			<?php
+
+				}
+
+			?>
+
+			<br>
+			<label>Prezime (prvo slovo veliko, najmanje 2 slova)</label>
+
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="prezime" type="text" placeholder="Prezime" name="prezime" onfocus="validiraj("prezime")" value='.$korisnik['prezime'].'>';
+				else {
+			?>
+			<input id="prezime" type="text" placeholder="Prezime" name="prezime" onfocus="validiraj('prezime')">
+
+			<?php
+
+				}
+
+			?>
+
+			<br>
+			<label>E-Mail (format nesto@nesto.nesto, sadrži ime i/ili prezime malim slovima)</label>
+
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="email" type="text" placeholder="Email" name="email" onfocus="validiraj("email")" value='.$korisnik['email'].'>';
+				else {
+			?>
+			<input id="email" type="text" placeholder="Email" name="email" onfocus="validiraj('email')">
+
+			<?php
+
+				}
+
+			?>
+			
 			<br>
 			<label>Država</label>
-			<select id="drzava" onchange="validirajDvoslovniKod()">
+
+			<?php
+				if(isset($_POST['ucitajAutora']))
+				{ 
+					print '<select name="drzava" id="drzava" onchange="validirajDvoslovniKod()">';
+					print '<option id="opcija" value = '.$korisnik['drzava'].'>';
+					echo "<script type='text/javascript'>dajDrzavu();</script>";
+					print '</option>';
+				}	
+				else print '<select name="drzava" id="drzava" onchange="validirajDvoslovniKod()">'; 
+
+			?>
 				<option value="AF">Afghanistan</option>
 				<option value="AX">Åland Islands</option>
 				<option value="AL">Albania</option>
@@ -494,19 +582,104 @@
 				<option value="ZM">Zambia</option>
 				<option value="ZW">Zimbabwe</option>
 			</select>
+
 			<br>
 			<label>Broj telefona</label>
-			<input type="tel" id="telefon" name="telefon" placeholder="Broj telefona" onblur="validirajPozivniBroj()">
+
+			<?php
+				if(isset($_POST['ucitajAutora'])) print '<input id="telefon" type="tel" placeholder="Broj telefona" name="telefon" value='.$korisnik['telefon'].'>';
+				else print '<input id="telefon" type="tel" placeholder="Broj telefona" name="telefon" onblur="validirajPozivniBroj()">';
+			?>
+
+			<input type="hidden" id="validno" name="validno">
 			<br>
-			<label>Članak (ne smije biti prazno)</label>
-			<textarea id="tekst" name="tekst" placeholder="Članak..." onfocus="validiraj('tekst')"></textarea>
+			<input type="submit" id="spasiAutora" name="spasiAutora" value="Dodaj">
 			<br>
-			<label><input type ="checkbox" id="komentari" name="komentari" value="Omogući komentare" checked>Mogućnost komentarisanja vijesti</label>
-			<br>
-			<input type="submit" id="dodajBtn" name="dodaj" value="Pošalji" onclick="return dodaj()">
+			<input type="submit" id="promijeniAutora" name="promijeniAutora" value="Spasi promjene">
 			<br>
 		</form>
 	</div>
+
+	<?php
+
+		if(isset($_POST['promijeniAutora']))
+		{
+			$username = htmlentities($_POST['user']);
+			$password = htmlentities($_POST['password']);
+			$potvrda = htmlentities($_POST['potvrda']);
+			$ime = htmlentities($_POST['ime']);
+			$prezime = htmlentities($_POST['prezime']);
+			$drzava = htmlentities($_POST['drzava']);
+            $telefon = htmlentities($_POST['telefon']);
+            $email = htmlentities($_POST['email']);
+
+            if(empty($username) || strlen($password) < 4 || ($password != $potvrda) || !preg_match("/^[A-Z][a-z]{1,15}$/", $ime) || !preg_match("/^[A-Z][a-z]{1,15}$/", $prezime) || empty($telefon) || !preg_match("/\S+@\S+\.\S+/", $email))
+            {
+            	$message = "Neki od podataka nije ispravno unesen, pratite upute iznad svakog od polja.";
+				echo "<script type='text/javascript'>alert('$message');</script>";
+            }
+            else
+            {
+				$upit = $veza->prepare("UPDATE autor SET username=:username, password=:password, ime=:ime, prezime=:prezime, drzava=:drzava, telefon=:telefon, email=:email where id=:id");
+				$message = "Uspješno ste promijenili autora.";
+
+				$upit->bindValue(":id", 17, PDO::PARAM_INT);
+				$upit->bindValue(":username", $username, PDO::PARAM_STR);
+				$upit->bindValue(":password", $password, PDO::PARAM_STR);
+				$upit->bindValue(":ime", $ime, PDO::PARAM_STR);
+				$upit->bindValue(":prezime", $prezime, PDO::PARAM_STR);
+				$upit->bindValue(":drzava", $drzava, PDO::PARAM_STR);
+				$upit->bindValue(":telefon", $telefon, PDO::PARAM_STR);
+				$upit->bindValue(":email", $email, PDO::PARAM_STR);
+
+				$upit->execute();
+
+	            
+	            echo "<script type='text/javascript'>alert('$message');</script>";
+	            header('Refresh: 0; URL = ./autori.php');
+            }
+		}
+
+		if(isset($_POST['spasiAutora']))
+		{
+			$username = htmlentities($_POST['user']);
+			$password = htmlentities($_POST['password']);
+			$potvrda = htmlentities($_POST['potvrda']);
+			$ime = htmlentities($_POST['ime']);
+			$prezime = htmlentities($_POST['prezime']);
+			$drzava = htmlentities($_POST['drzava']);
+            $telefon = htmlentities($_POST['telefon']);
+            $email = htmlentities($_POST['email']);
+
+            if(empty($username) || strlen($password) < 4 || ($password != $potvrda) || !preg_match("/^[A-Z][a-z]{1,15}$/", $ime) || !preg_match("/^[A-Z][a-z]{1,15}$/", $prezime) || empty($telefon) || !preg_match("/\S+@\S+\.\S+/", $email))
+            {
+            	$message = "Neki od podataka nije ispravno unesen, pratite upute iznad svakog od polja.";
+				echo "<script type='text/javascript'>alert('$message');</script>";
+            }
+            else
+            {
+
+				$upit = $veza->prepare("INSERT INTO autor SET username=:username, password=:password, ime=:ime, prezime=:prezime, drzava=:drzava, telefon=:telefon, email=:email");
+				$message = "Uspješno ste dodali autora.";
+
+				$hashPassword = sha1($password);
+
+				$upit->bindValue(":username", $username, PDO::PARAM_STR);
+				$upit->bindValue(":password", $hashPassword, PDO::PARAM_STR);
+				$upit->bindValue(":ime", $ime, PDO::PARAM_STR);
+				$upit->bindValue(":prezime", $prezime, PDO::PARAM_STR);
+				$upit->bindValue(":drzava", $drzava, PDO::PARAM_STR);
+				$upit->bindValue(":telefon", $telefon, PDO::PARAM_STR);
+				$upit->bindValue(":email", $email, PDO::PARAM_STR);
+
+				$upit->execute();
+
+	            
+	            echo "<script type='text/javascript'>alert('$message');</script>";
+	            header('Refresh: 0; URL = ./autori.php');
+            }
+		}
+	?>
 	
 	<footer>
 		© Copyright NFLBalkan.com 2016 <br>
