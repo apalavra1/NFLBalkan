@@ -1,3 +1,6 @@
+<?php
+    ob_start();
+?>
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Timovi po divizijama</title><meta charset="utf-8"><link rel="stylesheet" type="text/css" href="stil.css"></head><body>
 <div hidden id="prijavljen"></div>

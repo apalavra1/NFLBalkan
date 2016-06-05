@@ -7,7 +7,13 @@
     }
     function rest_get($request, $data) 
     {
-        $veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+        define('DB_HOST', getenv('OPENSHIFT_MYSQL_DB_HOST'));
+        define('DB_PORT',getenv('OPENSHIFT_MYSQL_DB_PORT'));
+        define('DB_USER',getenv('OPENSHIFT_MYSQL_DB_USERNAME'));
+        define('DB_PASS',getenv('OPENSHIFT_MYSQL_DB_PASSWORD'));
+        define('DB_NAME',getenv('OPENSHIFT_GEAR_NAME'));
+        $connectionString = 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';port='.DB_PORT;
+        $veza = new PDO($connectionString, DB_USER, DB_PASS);
         $veza->exec("set names utf8");
 
         $upitVijesti = $veza->prepare("SELECT * from vijest where autor=:autor");

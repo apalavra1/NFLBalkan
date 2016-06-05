@@ -1,3 +1,6 @@
+<?php
+    ob_start();
+?>
 <!DOCTYPE html>
 <html>
 
@@ -179,7 +182,13 @@
 			<?php
 				$ID;
 				$komentarID;
-				$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
+				define('DB_HOST', getenv('OPENSHIFT_MYSQL_DB_HOST'));
+		        define('DB_PORT',getenv('OPENSHIFT_MYSQL_DB_PORT'));
+		        define('DB_USER',getenv('OPENSHIFT_MYSQL_DB_USERNAME'));
+		        define('DB_PASS',getenv('OPENSHIFT_MYSQL_DB_PASSWORD'));
+		        define('DB_NAME',getenv('OPENSHIFT_GEAR_NAME'));
+		        $connectionString = 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';port='.DB_PORT;
+		        $veza = new PDO($connectionString, DB_USER, DB_PASS);
 				$veza->exec("set names utf8");
 				$upitVijesti = $veza->query("select id, naslov, url, alt, clanak, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, komentari from vijest where id = ".$_GET['vijest']);
 
@@ -224,8 +233,6 @@
             	
             		$autor = $korisnik['id'];
 					
-					$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
-					$veza->exec("set names utf8");
 					$upit = $veza->prepare("INSERT INTO komentar SET tekst=:komentar, vijest=:vijestID, autor=:autor");
 					
 					$upit->bindValue(":komentar", $komentar, PDO::PARAM_STR);
@@ -234,7 +241,7 @@
 
 	    			$upit->execute();
 
-	    			header('URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
+	    			header('Refresh : 0; URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
 				}
 
 				if(isset($_POST['odgovorBtn']))
@@ -251,8 +258,6 @@
             		$autor = $korisnik['id'];
 					$odgovor_na = $_POST['komentarID']; 
 					
-					$veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8", "nfluser", "nflpass");
-					$veza->exec("set names utf8");
 					$upit = $veza->prepare("INSERT INTO komentar SET tekst=:odgovor, vijest=:vijestID, autor=:autor, odgovor_na=:odgovor_na");
 					
 					$upit->bindValue(":odgovor", $odgovor, PDO::PARAM_STR);
@@ -262,7 +267,7 @@
 
 	    			$upit->execute();
 
-	    			header('URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
+	    			header('Refresh : 0; URL = ./prikazVijesti.php?vijest='.urlencode($vijestID));
 				}
 
 				if(isset($_POST['zabraniBtn'])) 

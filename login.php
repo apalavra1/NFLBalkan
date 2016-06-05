@@ -1,3 +1,6 @@
+<?php
+    ob_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -152,7 +155,6 @@
                 }
             ?>
             <?php
-                ob_start();
                 if(isset($_SESSION['login'])) 
                 {
             ?>
@@ -181,8 +183,15 @@
             $user = htmlEntities($_POST['userName'], ENT_QUOTES);
             $pass = sha1($_POST['password']);
             
-            $veza = new PDO("mysql:dbname=nfl_balkan;host=localhost;charset=utf8","nfluser", "nflpass");
+            define('DB_HOST', getenv('OPENSHIFT_MYSQL_DB_HOST'));
+            define('DB_PORT',getenv('OPENSHIFT_MYSQL_DB_PORT'));
+            define('DB_USER',getenv('OPENSHIFT_MYSQL_DB_USERNAME'));
+            define('DB_PASS',getenv('OPENSHIFT_MYSQL_DB_PASSWORD'));
+            define('DB_NAME',getenv('OPENSHIFT_GEAR_NAME'));
+            $connectionString = 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';port='.DB_PORT;
+            $veza = new PDO($connectionString, DB_USER, DB_PASS);
             $veza->exec("set names utf8");
+            
             $upit = $veza->prepare("SELECT username, password FROM autor WHERE username=:username and password=:password");
             
             $upit->bindValue(":username", $user, PDO::PARAM_STR);
@@ -196,7 +205,8 @@
                 $msg = "Uspjesno ste prijavljeni. Vratite se na pocetnu stranicu.";
                 $_SESSION['login'] = true;
                 $_SESSION['userName'] = $user;
-                header('Refresh: 1; URL = ./pocetna.php');
+                header('Refresh: 1; URL = http://apalavra1-nflbalkan.rhcloud.com/pocetna.php');
+                exit;
             }
             else 
             {
@@ -210,7 +220,7 @@
               <br><input id="userName"  name="userName" type="text" required placeholder="Username=admin" /><br><br>
               <input id="pass" name="password" type="password" required placeholder="Password=admin" /><br><br>
               <input id="prijava" type="submit" name="login" value="Prijava"><br>
-              <h4><?php echo $msg; ob_end_flush(); ?></h4> <br>
+              <h4><?php echo $msg; ?></h4> <br>
         </form>       
     </div>
     <footer>
