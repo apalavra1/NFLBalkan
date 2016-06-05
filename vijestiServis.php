@@ -33,6 +33,7 @@
                                    'autor' => $vijest['autor'],
                                    'komentari' => $vijest['komentari']);
                 $nizVijesti[] = $vijesti;
+                $vijesti = null;
             }
             $brojac++;
         }
