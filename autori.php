@@ -243,13 +243,15 @@
 
 			?>	
 
+			<?php
+				if(!isset($_POST['ucitajAutora']))
+				{
+			?>
+
 			<br>
 			<label>Korisnička šifra (najmanje 4 karaktera)</label>
 
-			<?php
-				if(isset($_POST['ucitajAutora'])) print '<input id="password" type="password" placeholder="Korisnička šifra" name="password" onfocus="validiraj("password")" value='.$korisnik['password'].'>';
-				else {
-			?>
+
 			<input id="password" type="password" placeholder="Korisnička šifra" name="password" onfocus="validiraj('password')">
 
 			<?php
@@ -258,13 +260,14 @@
 
 			?>
 
+			<?php
+				if(!isset($_POST['ucitajAutora']))
+				{ 
+			?>
+
 			<br>
 			<label>Potvrdite šifru (mora biti isto kao i korisnička šifra)</label>
-			
-			<?php
-				if(isset($_POST['ucitajAutora'])) print '<input id="potvrda" type="password" placeholder="Potvrda korisničke šifre" name="potvrda" onfocus="validiraj("potvrda")" value='.$korisnik['password'].'>';
-				else {
-			?>
+
 			<input id="potvrda" type="password" placeholder="Potvrda korisničke šifre" name="potvrda" onfocus="validiraj('potvrda')">
 
 			<?php
@@ -322,6 +325,7 @@
 			<label>Država</label>
 
 			<?php
+
 				if(isset($_POST['ucitajAutora']))
 				{ 
 					print '<select name="drzava" id="drzava" onchange="validirajDvoslovniKod()">';
@@ -587,15 +591,24 @@
 			<label>Broj telefona</label>
 
 			<?php
-				if(isset($_POST['ucitajAutora'])) print '<input id="telefon" type="tel" placeholder="Broj telefona" name="telefon" value='.$korisnik['telefon'].'>';
+				if(isset($_POST['ucitajAutora']))
+				{
+					print '<input id="telefon" type="tel" placeholder="Broj telefona" name="telefon" value='.$korisnik['telefon'].'><br>';
+					print '<input type="hidden" id="id" name="id" value = '.$korisnik['id'].'>';
+				} 
 				else print '<input id="telefon" type="tel" placeholder="Broj telefona" name="telefon" onblur="validirajPozivniBroj()">';
 			?>
 
 			<input type="hidden" id="validno" name="validno">
 			<br>
-			<input type="submit" id="spasiAutora" name="spasiAutora" value="Dodaj">
-			<br>
-			<input type="submit" id="promijeniAutora" name="promijeniAutora" value="Spasi promjene">
+			<?php
+				if(!isset($_POST['ucitajAutora']))
+				{
+					print '<input type="submit" id="spasiAutora" name="spasiAutora" value="Dodaj">';
+					print '<br>';
+				}
+				else print '<input type="submit" id="promijeniAutora" name="promijeniAutora" value="Spasi promjene">';
+			?>
 			<br>
 		</form>
 	</div>
@@ -605,27 +618,26 @@
 		if(isset($_POST['promijeniAutora']))
 		{
 			$username = htmlentities($_POST['user']);
-			$password = htmlentities($_POST['password']);
-			$potvrda = htmlentities($_POST['potvrda']);
 			$ime = htmlentities($_POST['ime']);
 			$prezime = htmlentities($_POST['prezime']);
 			$drzava = htmlentities($_POST['drzava']);
             $telefon = htmlentities($_POST['telefon']);
             $email = htmlentities($_POST['email']);
 
-            if(empty($username) || strlen($password) < 4 || ($password != $potvrda) || !preg_match("/^[A-Z][a-z]{1,15}$/", $ime) || !preg_match("/^[A-Z][a-z]{1,15}$/", $prezime) || empty($telefon) || !preg_match("/\S+@\S+\.\S+/", $email))
+            $idAutora = $_POST['id'];
+
+            if(empty($username) || !preg_match("/^[A-Z][a-z]{1,15}$/", $ime) || !preg_match("/^[A-Z][a-z]{1,15}$/", $prezime) || empty($telefon) || !preg_match("/\S+@\S+\.\S+/", $email))
             {
             	$message = "Neki od podataka nije ispravno unesen, pratite upute iznad svakog od polja.";
 				echo "<script type='text/javascript'>alert('$message');</script>";
             }
             else
             {
-				$upit = $veza->prepare("UPDATE autor SET username=:username, password=:password, ime=:ime, prezime=:prezime, drzava=:drzava, telefon=:telefon, email=:email where id=:id");
-				$message = "Uspješno ste promijenili autora.";
+				$upit = $veza->prepare("UPDATE autor SET username=:username, ime=:ime, prezime=:prezime, drzava=:drzava, telefon=:telefon, email=:email where id=:id");
+				$message = "Uspješno ste promijenili autora ".$username.'.';
 
-				$upit->bindValue(":id", 17, PDO::PARAM_INT);
+				$upit->bindValue(":id", $idAutora, PDO::PARAM_INT);
 				$upit->bindValue(":username", $username, PDO::PARAM_STR);
-				$upit->bindValue(":password", $password, PDO::PARAM_STR);
 				$upit->bindValue(":ime", $ime, PDO::PARAM_STR);
 				$upit->bindValue(":prezime", $prezime, PDO::PARAM_STR);
 				$upit->bindValue(":drzava", $drzava, PDO::PARAM_STR);
@@ -633,8 +645,7 @@
 				$upit->bindValue(":email", $email, PDO::PARAM_STR);
 
 				$upit->execute();
-
-	            
+            
 	            echo "<script type='text/javascript'>alert('$message');</script>";
 	            header('Refresh: 0; URL = ./autori.php');
             }
