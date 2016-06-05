@@ -161,6 +161,7 @@
             ?>
             <li id="novaVijest"><a class="nav" href="./novaVijest.php">Nova vijest</a></li>
             <li id="logout"><a class="nav" href="./logout.php">Odjava</a></li>
+            <li id="promjenaSifre"><a class="nav" href="./promjenaSifre.php">Šifra</a></li>
             <?php
             	}
             ?>
@@ -186,7 +187,7 @@
 		print "<br><select name='autor' id='autor'>";
 		foreach ($upitAutori as $autor) 
 		{
-			print "<option value=".$autor['id'].">".$autor['username']."</option>";
+			if($autor['username'] != "admin") print "<option value=".$autor['id'].">".$autor['username']."</option>";
 		}
 		print "</select><br>";
 		print '<input type="submit" id="ucitajAutora" name="ucitajAutora" value="Učitaj autora"><br>';

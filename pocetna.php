@@ -165,6 +165,7 @@
             ?>
             <li id="novaVijest"><a class="nav" href="./novaVijest.php">Nova vijest</a></li>
             <li id="logout"><a class="nav" href="./logout.php">Odjava</a></li>
+            <li id="promjenaSifre"><a class="nav" href="./promjenaSifre.php">Šifra</a></li>
             <?php
             	}
             ?>
@@ -176,6 +177,7 @@
       		<?php
       			}
       		?>
+
 
 
 		</ul>
