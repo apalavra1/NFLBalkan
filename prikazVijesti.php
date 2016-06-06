@@ -230,14 +230,16 @@
 
             		$upitAutor->execute();
             		$korisnik = $upitAutor->fetch();
-            	
-            		$autor = $korisnik['id'];
+
+            		if(isset($_SESSION['login'])) $autor = $korisnik['id'];
+            		else $autor = null;
 					
 					$upit = $veza->prepare("INSERT INTO komentar SET tekst=:komentar, vijest=:vijestID, autor=:autor");
-					
+						
 					$upit->bindValue(":komentar", $komentar, PDO::PARAM_STR);
 					$upit->bindValue(":vijestID", $vijestID, PDO::PARAM_INT);
-					$upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+					if(isset($_SESSION['login'])) $upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+					else $upit->bindValue(":autor", null, PDO::PARAM_NULL);
 
 	    			$upit->execute();
 
@@ -255,14 +257,16 @@
             		$upitAutor->execute();
             		$korisnik = $upitAutor->fetch();
             	
-            		$autor = $korisnik['id'];
+            		if(isset($_SESSION['login'])) $autor = $korisnik['id'];
+            		else $autor = null;
 					$odgovor_na = $_POST['komentarID']; 
 					
 					$upit = $veza->prepare("INSERT INTO komentar SET tekst=:odgovor, vijest=:vijestID, autor=:autor, odgovor_na=:odgovor_na");
 					
 					$upit->bindValue(":odgovor", $odgovor, PDO::PARAM_STR);
 					$upit->bindValue(":vijestID", $vijestID, PDO::PARAM_INT);
-					$upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+					if(isset($_SESSION['login'])) $upit->bindValue(":autor", $autor, PDO::PARAM_INT);
+					else $upit->bindValue(":autor", null, PDO::PARAM_NULL);
 					$upit->bindValue(":odgovor_na", $odgovor_na, PDO::PARAM_INT);
 
 	    			$upit->execute();
@@ -310,8 +314,12 @@
 					$upitKomentari = $veza->query("select id, tekst, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor from komentar where vijest = ".$_GET['vijest']." and odgovor_na is null");
 					foreach ($upitKomentari as $komentar) 
 					{
-						$upitAutor = $veza->query("select username from autor where id = ".$komentar['autor']);
-						$userAutora = $upitAutor->fetchColumn();
+						if($komentar['autor'] != null)
+						{	
+							$upitAutor = $veza->query("select username from autor where id = ".$komentar['autor']);
+							$userAutora = $upitAutor->fetchColumn();
+						}
+						else $userAutora = "Gost";
 						
 						print '<div class="komentar_container">';
 						print '<small id="autor">'.$userAutora.'</small>';
@@ -331,8 +339,12 @@
 						$upitOdgovori = $veza->query("select id, tekst, UNIX_TIMESTAMP(vrijeme) vrijeme2, autor, vijest from komentar where odgovor_na = ".$komentar['id']);
 						foreach ($upitOdgovori as $odgovor)
 						{
-							$upitAutorOdgovor = $veza->query("select username from autor where id = ".$odgovor['autor']);
-							$userAutoraOdgovor = $upitAutorOdgovor->fetchColumn();
+							if($odgovor['autor'] != null)
+							{
+								$upitAutorOdgovor = $veza->query("select username from autor where id = ".$odgovor['autor']);
+								$userAutoraOdgovor = $upitAutorOdgovor->fetchColumn();
+							}
+							else $userAutoraOdgovor = "Gost";
 							print '<div class="odgovor_container">';
 							print '<small id="autor">'.$userAutoraOdgovor.'</small>';
 							print '<p id="tekst" name="komentar" readonly>'.$odgovor['tekst'].'</p>';
